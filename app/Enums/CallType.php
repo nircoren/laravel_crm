@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Enums;
 
 enum CallType: string {
     case INBOUND = 'inbound';

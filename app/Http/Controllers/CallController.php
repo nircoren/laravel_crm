@@ -2,83 +2,145 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CallResource;
+use App\Enums\CallType;
 use App\Models\Call;
 use App\Models\Customer;
 use App\Models\Agent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use phpDocumentor\Reflection\Types\Collection;
-use ReflectionClass;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rule;
 
 class CallController {
 
-    public array $models = [
+    public array $modelClasses = [
         'agent' => Agent::class,
         'customer' => Customer::class,
         'call' => Call::class,
     ];
 
-    // TODO: make this for every model, then check on the query if model has the filter key.
-    protected array $allowedFields = [
-        'id',
-        'created_at',
-        Call::DURATION,
-        Call::TYPE,
-        Call::CUSTOMER_RELATION_KEY,
-        Call::AGENT_RELATION_KEY,
+    protected array $selectFields = [
+        "calls.id AS call_id",
+        "calls.created_at AS created_at",
+        "calls." . Call::DURATION . " AS duration",
+        "calls." . Call::TYPE . " AS type",
+        "agents.name AS agent_name",
+        "customers.name AS customer_name",
+        "customers.phone AS customer_phone",
     ];
+
+
+    public array $headers = [
+        'ID',
+        'Date',
+        'Duration',
+        'Type',
+        'Agent',
+        'Customer',
+        'Customer Phone',
+    ];
+
+    const int DEFAULT_ITEMS_PER_PAGE = 15;
 
     /**
      * @throws \Exception
      */
     public function index(Request $request) {
-        // Start the query builder
         $query = Call::query();
         $query->from('crm.calls');
 
-        $prefixedFields = array_map(fn($field) => 'calls.' . $field, $this->allowedFields);
-        $query->select($prefixedFields);
+        // Could make it more strict for other models.
+        $request->validate([
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date',
+            'filters' => 'array',
+            'filters.calls.type' => ['nullable', 'string', Rule::in(CallType::values())],
+            'filters.calls.duration' => 'integer',
+            'filters.calls.agent_id' => 'integer',
+            'filters.calls.customer_id' => 'integer',
+            'filters.*.*' => 'string',
+        ]);
 
-        if ($request->has('from_date')) {
-            $query->whereDate('created_at', '>=', $request->from_date);
-        }
-        if ($request->has('to_date')) {
-            $query->whereDate('created_at', '<=', $request->to_date);
-        }
-        if (is_array($request->filters)) {
-            $this->genericFilter($request->filters, $query);
+        $query->select($this->selectFields);
+
+        // Join is less readable but more efficient than with().
+        $query->join('agents', "calls.agent_id", '=', "agents.id");
+        $query->join('customers', "calls.customer_id", '=', "customers.id");
+
+        if ($request->has('from_date') || $request->has('to_date')) {
+            $fromDate = $request->from_date ?? '1970-01-01';
+            $toDate = $request->to_date ?? now();
+
+            $query->whereBetween('calls.created_at', [$fromDate, $toDate]);
         }
 
-        $perPage = $request->input('per_page', 15); // Default to 15 items per page
+
+        if ($request->has('filters')) {
+            $this->dynamicFilter($request->input('filters'), $query);
+        }
+        $perPage = $request->input('per_page', self::DEFAULT_ITEMS_PER_PAGE);
+        $query->orderBy('calls.id', 'desc');
         $calls = $query->paginate($perPage);
 
-        return CallResource::collection($calls);
+        $calls->getCollection()->transform(function ($call) {
+            return [
+                'id' => $call->call_id,
+                'date' => $this->formatDate($call->created_at),
+                'duration' => $this->formatDuration($call->duration),
+                'type' => $call->type,
+                'agent' => $call->agent_name,
+                'customer' => $call->customer_name,
+                'customer_phone' => $call->customer_phone,
+            ];
+        });
+
+        return $calls;
     }
 
-    // Generic filter based on models and fields.
-    // Join is less readable but more efficient than eloquent loading.
+
+    // Dynamic filter based on models and fields.
     /**
      * @throws \Exception
      */
-    private function genericFilter(array $requestFilters, Builder &$query): void {
+    private function dynamicFilter(array $requestFilters, Builder &$query): void {
         foreach ($requestFilters as $modelName => $filters) {
-            $modelClass = $this->models[$modelName] ?? null;
+            $modelClass = $this->modelClasses[$modelName] ?? null;
             if (!$modelClass) {
                 throw new \Exception('Model not found');
             }
+            /* @var Model $model */
             $model = new $modelClass();
-            $joinTable = $model->getTable();
-            $query->join($joinTable, 'calls.' . $model->getForeignKey(), '=', $joinTable . '.id');
-            $joinTableColumns = Schema::getColumnListing($joinTable); // this is bad..
+            $modelTable = $model->getTable();
+            $modelProps = $this->getModelProps($model);
             foreach ($filters as $field => $value) {
-                if (!in_array($field, $joinTableColumns)) {
+                if (!in_array($field, $modelProps)) {
                     throw new \Exception('Field not found');
                 }
-                $query->where($joinTable . '.' . $field, $value);
+                // Easly change to LIKE if needed.
+                $query->where($modelTable . '.' . $field, $value);
             }
         }
+    }
+
+    public function getModelProps(Model $model): array {
+        $fillable = $model->getFillable();
+        $guarded = $model->getGuarded() === ['*'] ? [] : $model->getGuarded();
+        $genericProps = [
+            $model->getKeyName(),
+            $model->getCreatedAtColumn(),
+            $model->getUpdatedAtColumn(),
+        ];
+        return array_merge($fillable, $guarded, $genericProps);
+    }
+
+    private function formatDuration(int $duration): string {
+        $hours = floor($duration / 3600);
+        $minutes = floor(($duration - $hours * 3600) / 60);
+        $seconds = $duration - $hours * 3600 - $minutes * 60;
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+    }
+
+    private function formatDate(string $date): string {
+        return date('Y-m-d', strtotime($date));
     }
 }

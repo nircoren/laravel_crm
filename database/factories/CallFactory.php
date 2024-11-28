@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\CallType;
 use App\Models\Call;
-use App\Models\CallType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
