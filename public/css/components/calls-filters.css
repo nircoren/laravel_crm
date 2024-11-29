@@ -1,0 +1,37 @@
+.filters-container {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.filters-container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.filters-container input[type="date"],
+.filters-container select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.filters-container select#filters_call_agent_id {
+    min-width: 150px;
+}
+
+.filters-container button {
+    align-self: start;
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filters-container .button-container {
+    display: flex;
+}

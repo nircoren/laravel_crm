@@ -10,18 +10,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function (Request $request, CallController $callController, AgentController $agentController) {
     $agents = $agentController->index($request);
     $calls = $callController->index($request);
-    $headers = $callController->headers;
+    $headers = $callController->gridHeaders;
+    $models = $callController->getModelFieldsForDynamicFiltering();
 
-    $dynamicFilters = [];
-    foreach ($callController->modelClasses as $modelClass) {
-        $model = new $modelClass;
-        $props = $callController->getModelProps($model);
-        $dynamicFilters[$model->getTable()] = $props;
-    }
-
-//    $dynamicFilters = [
-//        'calls' => ['type' => 'string', 'duration' => 'integer', 'agent_id' => 'integer'],
-//        'customer' => ['hi' => 'string', 'there' => 'integer']
-//    ];
-    return view('index', compact('agents', 'calls', 'headers', 'dynamicFilters'));
+    return view('index', compact('agents', 'calls', 'headers', 'models'));
 })->name('index');

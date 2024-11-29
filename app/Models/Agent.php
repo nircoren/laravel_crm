@@ -15,4 +15,9 @@ class Agent extends Model
     {
         return $this->hasMany(Call::class);
     }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }

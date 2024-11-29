@@ -9,20 +9,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Call>
  */
-class CallFactory extends Factory
-{
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
-    public function definition(): array
-    {
+class CallFactory extends Factory {
+
+    public function definition(): array {
         return [
-            Call::AGENT_RELATION_KEY => $this->faker->numberBetween(1, 100),
-            Call::CUSTOMER_RELATION_KEY => $this->faker->numberBetween(1, 100),
-            Call::DURATION => $this->faker->numberBetween(1, 3600),
-            Call::TYPE => $this->faker->randomElement(CallType::values()),
+            'agent_id' => $this->faker->numberBetween(1, 100),
+            'customer_id' => $this->faker->numberBetween(1, 100),
+            'duration' => $this->faker->numberBetween(1, 3600),
+            'type' => $this->faker->randomElement(CallType::values()),
+            'notes' => $this->faker->sentence(),
         ];
     }
 }

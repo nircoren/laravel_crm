@@ -15,12 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class Call extends Model {
     use HasFactory;
 
-    const string DURATION = 'duration';
-    const string TYPE = 'type';
-    const string AGENT_RELATION_KEY = 'agent_id';
-    const string CUSTOMER_RELATION_KEY = 'customer_id';
-
-    protected $fillable = [self::DURATION, self::TYPE, self::AGENT_RELATION_KEY, self::CUSTOMER_RELATION_KEY];
+    protected $fillable = ['duration', 'type','notes'];
 
     public function agent() {
         return $this->belongsTo(Agent::class);

@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'components/calls-filters.css';
+@import 'components/calls-grid.css';
+h1 {
+    text-align: center;
+}
+
+main {
+    font-family: Arial;
+}

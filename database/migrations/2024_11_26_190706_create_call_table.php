@@ -14,8 +14,9 @@ return new class extends Migration
     {
         Schema::create('calls', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', CallType::values())->default('inbound'); // Predefined options
+            $table->enum('type', CallType::values())->default('inbound');
             $table->integer('duration')->default(0); // time in int (seconds)
+            $table->string('notes')->nullable();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->foreignId('agent_id')->constrained('agents')->cascadeOnDelete();
             $table->timestamps();
