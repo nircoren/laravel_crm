@@ -2,7 +2,6 @@
     margin-bottom: 20px;
     display: flex;
     gap: 15px;
-    justify-content: center;
 }
 
 .filters-container label {

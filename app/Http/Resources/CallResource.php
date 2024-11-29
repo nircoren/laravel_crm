@@ -10,9 +10,11 @@ class CallResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
+     * @param Request|null $request *
+     *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(?Request $request = null): array
     {
         return [
             'id' => $this->call_id,
@@ -26,6 +28,7 @@ class CallResource extends JsonResource
         ];
     }
 
+    // Duration is saved in seconds in the database.
     private function formatDuration(int $duration): string {
         $hours = floor($duration / 3600);
         $minutes = floor(($duration - $hours * 3600) / 60);

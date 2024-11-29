@@ -18,8 +18,6 @@ return new class extends Migration {
             $table->foreignId('agent_id')->constrained('agents')->cascadeOnDelete();
             $table->timestamps();
 
-            $table->index('email');
-
         });
     }
 

@@ -12,8 +12,8 @@
         <tbody>
         @foreach($calls as $call)
             <tr>
-                @foreach($call as $prop)
-                    <td>{{ $prop }}</td>
+                @foreach($call->toArray() as $field)
+                    <td>{{ $field }}</td>
                 @endforeach
             </tr>
         @endforeach

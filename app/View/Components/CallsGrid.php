@@ -2,13 +2,12 @@
 
 namespace App\View\Components;
 
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\View\Component;
 
-class CallsGrid extends Component
-{
-    public $headers;
-    public $calls;
-    public $page;
+class CallsGrid extends Component {
+    public array $headers;
+    public ResourceCollection $calls;
 
     /**
      * Create a new component instance.
@@ -16,8 +15,7 @@ class CallsGrid extends Component
      * @param array $headers
      * @param array $calls
      */
-    public function __construct($headers, $calls)
-    {
+    public function __construct(array $headers, ResourceCollection $calls) {
         $this->headers = $headers;
         $this->calls = $calls;
     }
@@ -27,8 +25,7 @@ class CallsGrid extends Component
      *
      * @return \Illuminate\View\View|string
      */
-    public function render()
-    {
+    public function render() {
         return view('components.calls-grid');
     }
 }

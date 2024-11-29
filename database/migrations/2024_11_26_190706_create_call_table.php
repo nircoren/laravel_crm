@@ -5,17 +5,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('calls', function (Blueprint $table) {
             $table->id();
             $table->enum('type', CallType::values())->default('inbound');
-            $table->integer('duration')->default(0); // time in int (seconds)
+            $table->integer('duration')->default(0); // Time in int (seconds)
             $table->string('notes')->nullable();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->foreignId('agent_id')->constrained('agents')->cascadeOnDelete();
@@ -29,8 +27,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('call');
     }
 };
