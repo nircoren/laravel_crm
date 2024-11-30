@@ -31,8 +31,8 @@ class FilterService {
                     throw new \Exception("Field {$field} not found in model {$modelName}");
                 }
 
-                $query->where($modelTable . '.' . $field, 'LIKE', '%' . $value . '%');
-//                $query->where($modelTable . '.' . $field, $value);
+//                $query->where($modelTable . '.' . $field, 'LIKE', '%' . $value . '%');
+                $query->where($modelTable . '.' . $field, $value);
 
             }
         }

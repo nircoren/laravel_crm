@@ -6,11 +6,9 @@ use App\Enums\CallType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CallRequest extends FormRequest
-{
+class CallRequest extends FormRequest {
     // Right now I don't validate most fields from other models, but I should
-    public function rules()
-    {
+    public function rules() {
         return [
             'from_date' => 'nullable|date',
             'to_date' => 'nullable|date',
