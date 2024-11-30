@@ -11,12 +11,6 @@ use App\Services\FilterService;
 
 class CallController {
 
-    public const array RELATED_MODEL_CLASS_MAP = [
-        'agents' => Agent::class,
-        'customers' => Customer::class,
-        'calls' => Call::class,
-    ];
-
     private const array SELECT_FIELDS = [
         "calls.id AS call_id",
         "calls.created_at AS created_at",
@@ -26,17 +20,6 @@ class CallController {
         "agents.name AS agent_name",
         "customers.name AS customer_name",
         "customers.phone AS customer_phone",
-    ];
-
-    public const array GRID_HEADERS = [
-        'Call ID',
-        'Date',
-        'Duration',
-        'Notes',
-        'Type',
-        'Agent',
-        'Customer',
-        'Customer Phone',
     ];
 
     const int DEFAULT_ITEMS_PER_PAGE = 15;
@@ -63,7 +46,7 @@ class CallController {
 
         if ($request->has('filters')) {
             try {
-                FilterService::dynamicFilterQuery($request->input('filters'), $query, self::RELATED_MODEL_CLASS_MAP);
+                FilterService::dynamicFilterQuery($request->input('filters'), $query, self::RELATED_MODELS_CLASS_MAP);
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 400);
             }

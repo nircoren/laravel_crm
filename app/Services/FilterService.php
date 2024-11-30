@@ -2,11 +2,19 @@
 
 namespace App\Services;
 
+use App\Models\Agent;
+use App\Models\Call;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class FilterService {
 
+    private const array MODEL_CLASS_MAP = [
+        'agents' => Agent::class,
+        'customers' => Customer::class,
+        'calls' => Call::class,
+    ];
     /**
      * Dynamic filter based on models and fields.
      * Filters are passed in the following format:
@@ -47,9 +55,9 @@ class FilterService {
         return array_merge($fillable, $guarded, $genericFields);
     }
 
-    public static function getFieldsForAllModels($modelClasses): array {
+    public static function getModelsFields(): array {
         $models = [];
-        foreach ($modelClasses as $modelClass) {
+        foreach (self::MODEL_CLASS_MAP as $modelClass) {
             $model = new $modelClass;
             $fields = self::getModelFields($model);
             $models[$model->getTable()] = $fields;

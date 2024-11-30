@@ -18,13 +18,12 @@
                 :fromDate="request('from_date')"
                 :toDate="request('to_date')"
                 :selectedAgent="request('filters.call.agent_id')"
-                :models="$modelsFieldMap"
+                :modelsFieldMap="$modelsFieldMap"
             />
         </form>
 
         <x-calls-grid
             :calls="$calls"
-            :headers="$headers"
         />
     </div>
 

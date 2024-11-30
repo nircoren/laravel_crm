@@ -25,7 +25,7 @@
     {{-- Dynamic filters --}}
     <div>
         <label>Dynamic:</label>
-        @foreach($models as $model => $fields)
+        @foreach($modelsFieldMap as $model => $fields)
             <div>
                 <label for="filters[{{ $model }}]">{{ $model }}</label>
                 <select

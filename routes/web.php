@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function (CallRequest $request, CallController $callController, AgentController $agentController) {
     $agents = $agentController->index($request);
     $calls = $callController->index($request);
-    $headers = $callController::GRID_HEADERS;
-    $modelsFieldMap = FilterService::getFieldsForAllModels($callController::RELATED_MODEL_CLASS_MAP);
+    $modelsFieldMap = FilterService::getModelsFields();
 
-    return view('index', compact('agents', 'calls', 'headers', 'modelsFieldMap'));
+    return view('index', compact('agents', 'calls', 'modelsFieldMap'));
 })->name('index');

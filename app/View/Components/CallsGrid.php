@@ -6,25 +6,23 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\View\Component;
 
 class CallsGrid extends Component {
-    public array $headers;
+    public array $headers = [
+        'Call ID',
+        'Date',
+        'Duration',
+        'Notes',
+        'Type',
+        'Agent',
+        'Customer',
+        'Customer Phone',
+    ];
+
     public ResourceCollection $calls;
 
-    /**
-     * Create a new component instance.
-     *
-     * @param array $headers
-     * @param array $calls
-     */
-    public function __construct(array $headers, ResourceCollection $calls) {
-        $this->headers = $headers;
+    public function __construct(ResourceCollection $calls) {
         $this->calls = $calls;
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\View\View|string
-     */
     public function render() {
         return view('components.calls-grid');
     }
