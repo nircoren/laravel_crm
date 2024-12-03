@@ -5,8 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CallResource extends JsonResource
-{
+class CallReportResource extends JsonResource {
     /**
      * Transform the resource into an array.
      *
@@ -14,8 +13,7 @@ class CallResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(?Request $request = null): array
-    {
+    public function toArray(?Request $request = null): array {
         return [
             'id' => $this->call_id,
             'date' => $this->formatDate($this->created_at),

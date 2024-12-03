@@ -12,7 +12,7 @@
 </header>
 <main>
     <div class="main-container">
-        <form id="myForm" method="GET" action="{{ route('index') }}">
+        <form id="myForm" method="GET" action="{{ route('reports') }}">
             <x-calls-filters
                 :agents="$agents"
                 :fromDate="request('from_date')"
@@ -22,13 +22,10 @@
             />
         </form>
 
-        <x-calls-grid
+        <x-calls-report-grid
             :calls="$calls"
         />
     </div>
-
 </main>
 </body>
 </html>
-
-

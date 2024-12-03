@@ -30,7 +30,7 @@ class CallsGridFeatureTest extends TestCase {
             'customer_id' => $this->customer->id,
         ]);
 
-        $response = $this->get(route('index'));
+        $response = $this->get(route('reports'));
 
         $response->assertStatus(200);
         $response->assertViewHas('calls');
@@ -55,7 +55,7 @@ class CallsGridFeatureTest extends TestCase {
             'customer_id' => $this->customer->id,
         ]);
 
-        $response = $this->get(route('index') . '?filters[agents][id]=' . $agent1->id);
+        $response = $this->get(route('reports') . '?filters[agents][id]=' . $agent1->id);
 
         $response->assertStatus(200);
         $calls = $response->original->getData()['calls'];
@@ -79,7 +79,7 @@ class CallsGridFeatureTest extends TestCase {
             'created_at' => $startDate->addDays(2),
         ]);
 
-        $response = $this->get(route('index') . '?from_date=' . $startDate->format('Y-m-d') . '&to_date=' . $endDate->format('Y-m-d'));
+        $response = $this->get(route('reports') . '?from_date=' . $startDate->format('Y-m-d') . '&to_date=' . $endDate->format('Y-m-d'));
 
         $response->assertStatus(200);
 

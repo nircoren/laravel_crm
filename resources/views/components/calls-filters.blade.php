@@ -11,7 +11,7 @@
 
     <div>
         <label for="filters_call_agent_id">Agent</label>
-        <select id="filters_call_agent_id" name="filters[agents][id]">
+        <select id="filters_call_agent_id" name="filters[agent][id]">
             <option value="" disabled selected>-- Select Agent --</option>
             @foreach($agents as $agent)
                 <option value="{{ $agent->id }}"

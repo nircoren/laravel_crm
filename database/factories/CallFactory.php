@@ -6,9 +6,6 @@ use App\Enums\CallType;
 use App\Models\Call;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Call>
- */
 class CallFactory extends Factory {
 
     public function definition(): array {

@@ -5,7 +5,7 @@ namespace App\View\Components;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\View\Component;
 
-class CallsGrid extends Component {
+class CallsReportGrid extends Component {
     public array $headers = [
         'Call ID',
         'Date',
@@ -24,6 +24,6 @@ class CallsGrid extends Component {
     }
 
     public function render() {
-        return view('components.calls-grid');
+        return view('components.calls-report-grid');
     }
 }
